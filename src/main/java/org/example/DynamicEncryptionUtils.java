@@ -8,6 +8,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
 public class DynamicEncryptionUtils {
@@ -58,7 +59,19 @@ public class DynamicEncryptionUtils {
         return null;
     }
 
-    public static String decrypt(String encryptedText) {
+    public static String decrypt2Text(String encryptedText) {
+        try {
+            byte[] decryptedTextBytes = decrypt(encryptedText);
+            if (decryptedTextBytes == null) {
+                return null;
+            }
+            return new String(decryptedTextBytes, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static byte[] decrypt(String encryptedText) {
         try {
             return processDecryption(encryptedText.getBytes());
         } catch (Exception e) {
@@ -67,7 +80,7 @@ public class DynamicEncryptionUtils {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static String processDecryption(byte[] encryptedData) {
+    private static byte[] processDecryption(byte[] encryptedData) {
         try {
             InputStream is = new ByteArrayInputStream(encryptedData);
 
@@ -92,7 +105,7 @@ public class DynamicEncryptionUtils {
 
             SecretKey secretKey = new SecretKeySpec(secretKeyByes, 0, secretKeyByes.length, KEY_ALGORITHM);
 
-            return new String(AESUtils.decrypt(encryptedTextBytes, secretKey.getEncoded(), initializationVectorByes));
+            return AESUtils.decrypt(encryptedTextBytes, secretKey.getEncoded(), initializationVectorByes);
         } catch (Throwable e) {
             e.printStackTrace();
         }

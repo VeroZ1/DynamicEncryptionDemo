@@ -13,7 +13,7 @@ public class Main {
         String hex2String = new String(DynamicEncryptionUtils.hexString2Bytes(encryptedText));
         System.out.println("hex2string text: " + hex2String);
 
-        String decryptedText = DynamicEncryptionUtils.decrypt(encryptedText);
+        String decryptedText = DynamicEncryptionUtils.decrypt2Text(encryptedText);
         System.out.println("decrypted text: " + decryptedText);
     }
 }
